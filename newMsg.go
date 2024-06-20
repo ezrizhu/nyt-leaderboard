@@ -11,7 +11,7 @@ func newMsg(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	if m.ChannelID != "1253428089409503385" {
+	if m.ChannelID != "1251996771912126525" {
 		return
 	}
 
@@ -20,10 +20,29 @@ func newMsg(s *discordgo.Session, m *discordgo.MessageCreate) {
 		wordle(s, m)
 	case strings.HasPrefix(m.Content, "Connections"):
 		connections(s, m)
-	case strings.HasPrefix(m.Content, "!leaderboard"):
-		//leaderboard(s, m)
-		return
+	case strings.HasPrefix(m.Content, "!wl"):
+		wLeaderboard(s, m)
+	case strings.HasPrefix(m.Content, "!cl"):
+		cLeaderboard(s, m)
 	default:
 		return
 	}
+}
+
+func wLeaderboard(s *discordgo.Session, m *discordgo.MessageCreate) {
+	embed := &discordgo.MessageEmbed{
+		Title:       "Wordle",
+		Description: wl.showLeaderboard(),
+		Color:       2227217,
+	}
+	s.ChannelMessageSendEmbed(m.ChannelID, embed)
+}
+
+func cLeaderboard(s *discordgo.Session, m *discordgo.MessageCreate) {
+	embed := &discordgo.MessageEmbed{
+		Title:       "Connections",
+		Description: cl.showLeaderboard(),
+		Color:       2227217,
+	}
+	s.ChannelMessageSendEmbed(m.ChannelID, embed)
 }

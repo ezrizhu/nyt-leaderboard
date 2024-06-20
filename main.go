@@ -10,8 +10,12 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+var wl WordleLeaderboard
+var cl ConnectionsLeaderboard
+
 func init() {
-	// init datastore
+	wl = wordleLeaderboardInit()
+	cl = connectionsLeaderboardInit()
 }
 
 func main() {

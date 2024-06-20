@@ -1,11 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -36,7 +37,6 @@ func wordleInit(msg string) Wordle {
 			j += 1
 		}
 	}
-	fmt.Println(w)
 	return w
 }
 
@@ -61,15 +61,27 @@ func (w Wordle) scoring() int {
 func wordle(s *discordgo.Session, m *discordgo.MessageCreate) {
 	msg := m.Content
 	user := m.Author.ID
-	_ = user
 
 	w := wordleInit(msg)
 	score := w.scoring()
-
 	scoreStr := strconv.Itoa(score)
 
-	s.ChannelMessageSendReply(m.ChannelID, scoreStr, m.Reference())
+	newScore := wl.addScore(user, score)
 
-	//write to leaderboard
+	newScoreStr := strconv.Itoa(newScore)
+	resp := "You earned " + scoreStr + " points today\n"
+	resp += "Total score: " + newScoreStr
+
+	dt := time.Now()
+	log.Info().
+		Str("UserID", user).
+		Str("Username", m.Author.Username).
+		Str("Date", dt.String()).
+		Int("Score", score).
+		Int("Total", newScore).
+		Msg("New Wordle Entry")
+
+	s.ChannelMessageSendReply(m.ChannelID, resp, m.Reference())
+
 	return
 }
