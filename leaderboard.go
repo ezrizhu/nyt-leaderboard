@@ -113,8 +113,14 @@ func (wl *WordleLeaderboard) showLeaderboard() string {
 	})
 
 	leaderboardText := ""
-	for i, kv := range ss {
-		leaderboardText += fmt.Sprintf("%d. <@%s>: %d\n", i+1, kv.Key, kv.Value)
+	i := 1
+	for j, kv := range ss {
+		if j != 0 {
+			if ss[j-1].Value != kv.Value {
+				i += 1
+			}
+		}
+		leaderboardText += fmt.Sprintf("%d, <@%s>: %d\n", i, kv.Key, kv.Value)
 	}
 
 	return leaderboardText
@@ -140,8 +146,14 @@ func (cl *ConnectionsLeaderboard) showLeaderboard() string {
 	})
 
 	leaderboardText := ""
-	for i, kv := range ss {
-		leaderboardText += fmt.Sprintf("%d. <@%s>: %d\n", i+1, kv.Key, kv.Value)
+	i := 1
+	for j, kv := range ss {
+		if j != 0 {
+			if ss[j-1].Value != kv.Value {
+				i += 1
+			}
+		}
+		leaderboardText += fmt.Sprintf("%d, <@%s>: %d\n", i, kv.Key, kv.Value)
 	}
 
 	return leaderboardText
